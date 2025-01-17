@@ -94,3 +94,6 @@ app_binaries/
 
 # Screenshots
 *.png
+
+.env.py
+
