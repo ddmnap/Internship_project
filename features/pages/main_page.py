@@ -24,11 +24,19 @@ class MainPage(BasePage):
 
     def click_settings(self):
         logging.info("Waiting for the settings button to be clickable...")
-        locator = self.SETTINGS_BUTTON
-        WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable(locator)
-        ).click()
-        logging.info("Settings button clicked successfully.")
+        locator = self.SETTINGS_BUTTON  # Ensure SETTINGS_BUTTON is defined correctly
+
+        try:
+            # Wait until the button is clickable and click it
+            WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable(locator)
+            ).click()
+            logging.info("Settings button clicked successfully.")
+        except Exception as e:
+            # Log an error message and capture a screenshot for debugging
+            logging.error(f"Failed to click the settings button: {e}")
+            self.driver.save_screenshot('error_click_settings.png')  # Saves a screenshot for investigation
+            raise
 
     def click_change_password(self):
         self.click(self.CHANGE_PASSWORD_BUTTON)
