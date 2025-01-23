@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 
 
+
 logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(level=logging.INFO)
 
@@ -49,5 +50,3 @@ def verify_change_password_form(context):
 def verify_change_password_button(context):
     logging.info("Checking if the 'Change password' button is enabled...")
     assert context.app.change_password_page.is_change_password_button_enabled(), "Change password button is not enabled."
-
-

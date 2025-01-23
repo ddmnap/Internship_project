@@ -12,6 +12,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import os  # For reading environment variables
 
+# Command to run tests with Allure & Behave:
+#
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
@@ -21,26 +24,26 @@ def browser_init(context,scenario_name):
     """
 
 
-# def before_all(context):
-#     logging.info("Setting up the browser and application...")
-#
-#     # Set up the WebDriver (Chrome example)
-#     driver_path = ChromeDriverManager().install()
-#     service = Service(driver_path)
-#     options = Options()
-#     options.add_argument("--headless")  # Use headless mode if desired
-#     context.driver = webdriver.Chrome(service=service, options=options)
-#
-#     # Initialize the App object with the driver
-#     context.app = App(context.driver)
-#     logging.info("Browser and application setup complete.")
-#
-#
-# def after_all(context):
-#     logging.info("Closing the browser...")
-#     # Quit the WebDriver
-#     if hasattr(context, 'driver'):
-#         context.driver.quit()
+def before_all(context):
+    logging.info("Setting up the browser and application...")
+
+    # Set up the WebDriver (Chrome example)
+    driver_path = ChromeDriverManager().install()
+    service = Service(driver_path)
+    options = Options()
+    options.add_argument("--headless")  # Use headless mode if desired
+    context.driver = webdriver.Chrome(service=service, options=options)
+
+    # Initialize the App object with the driver
+    context.app = App(context.driver)
+    logging.info("Browser and application setup complete.")
+
+
+def after_all(context):
+    logging.info("Closing the browser...")
+    # Quit the WebDriver
+    if hasattr(context, 'driver'):
+        context.driver.quit()
 
 def before_scenario(context, scenario):
     logging.info(f"Starting scenario: {scenario.name}")
@@ -56,23 +59,23 @@ def browser_init(context, scenario_name):
     context.driver = webdriver.Chrome(service=service)
 
 
-    ### BROWSERSTACK ###
-    # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
-    bs_user = 'darianapoleonova_NT1jEw'
-    bs_key = 'E8PmFxeenm1pnbsgqd6y'
-    url = f'http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub'
+    # ### BROWSERSTACK ###
+    # # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
+    # bs_user = 'darianapoleonova_NT1jEw'
+    # bs_key = 'E8PmFxeenm1pnbsgqd6y'
+    # url = f'http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub'
+    # #
+    # options = Options()
+    # bstack_options = {
     #
-    options = Options()
-    bstack_options = {
-
-        "os": "OS X",
-        "osVersion": "Monterey",
-        'browserName': 'Safari',
-        'browserVersion': 15.6,
-        'sessionName': scenario_name,
-    }
-    options.set_capability('bstack:options', bstack_options)
-    context.driver = webdriver.Remote(command_executor=url, options=options)
+    #     "os": "OS X",
+    #     "osVersion": "Monterey",
+    #     'browserName': 'Safari',
+    #     'browserVersion': 15.6,
+    #     'sessionName': scenario_name,
+    # }
+    # options.set_capability('bstack:options', bstack_options)
+    # context.driver = webdriver.Remote(command_executor=url, options=options)
 
     def before_scenario(context, scenario):
         print('\nStarted scenario: ', scenario.name)
