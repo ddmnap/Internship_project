@@ -1,3 +1,4 @@
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -29,22 +30,38 @@ def log_in_with_valid_credentials(context):
     context.app.log_in_page.log_in(email, password)
 
 
+# @when("I click on the settings button")
+# def click_settings_button(context):
+#     logging.info("Clicking on the settings button...")
+#     context.app.main_page.click_settings()
+#     sleep(2)
+
 @when("I click on the settings button")
-def click_settings_button(context):
-    logging.info("Clicking on the settings button...")
-    context.app.main_page.click_settings()
-    sleep(2)
+def click_assistant_button(context):  # For mobile
+    logging.info("Clicking the Assistant button (mobile version)...")
+    context.app.main_page.click_assistant_button()
+
+# @when("I click on the change password button")
+# def scroll_and_click_change_password(context):
+#     logging.info("Clicking on the change password button...")
+#     context.app.main_page.click_change_password()
 
 @when("I click on the change password button")
-def click_change_password_button(context):
+def scroll_and_click_change_password(context):
     logging.info("Clicking on the change password button...")
-    context.app.main_page.click_change_password()
+    context.app.main_page.scroll_and_click_change_password()
+
+# @when("I click on the change password button")  Web
+# def click_change_password_button(context):
+#     logging.info("Clicking on the change password button...")
+#     context.app.main_page.click_change_password()
 
 @then("I should see the change password form")
 
 def verify_change_password_form(context):
     logging.info("Verifying that the change password form is displayed...")
     assert context.app.change_password_page.is_password_form_displayed(), "Change password form is not displayed."
+
 
 @then('the "Change password" button should be available')
 def verify_change_password_button(context):
