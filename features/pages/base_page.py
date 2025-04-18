@@ -15,4 +15,7 @@ class BasePage:
     def input_text(self, locator, text):
         field = self.find_element(locator)
         field.clear()
+        field.click()  # focus before typing
         field.send_keys(text)
+        print(f"Entered text into: {locator}")
+

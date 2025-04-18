@@ -1,6 +1,7 @@
-from features.pages import LoginPage
+from features.pages.main_page import MainPage
+from features.pages.log_in_page import LoginPage
 from features.pages.change_password_page import PasswordPage
-from features.pages import MainPage, LoginPage
+
 
 
 class App:
