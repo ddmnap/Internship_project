@@ -9,24 +9,6 @@ from time import sleep
 logging.basicConfig(level=logging.INFO)
 
 
-@given("I open the main page")
-def step_open_main_page(context):
-    context.driver.get("https://soft.reelly.io")
-
-
-@given("I log in to the page")
-def step_login(context):
-    email = os.getenv("REELLY_EMAIL")
-    password = os.getenv("REELLY_PASSWORD")
-
-    if not email or not password:
-        raise ValueError("Environment variables for credentials are not set.")
-
-    logging.info("Waiting for email input field...")
-    WebDriverWait(context.driver, 15).until(EC.presence_of_element_located((By.ID, "email-2")))
-
-    context.app.log_in_page.log_in(email, password)
-
 
 @when("I click on the settings option")
 def step_click_settings(context):

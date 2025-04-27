@@ -9,27 +9,22 @@ from app import App
 logging.basicConfig(level=logging.INFO)
 
 def browser_init(context, scenario_name, browser='chrome'):
-    """
-    Initialize browser for testing.
-    :param context: Behave context
-    :param scenario_name: Current scenario name
-    :param browser: Browser type (default: Chrome)
-    """
     logging.info(f"Initializing browser: {browser} for scenario: {scenario_name}")
 
     if browser == 'chrome':
         chrome_options = Options()
         chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=375,812")  # iPhone X size for better emulation
-        mobile_emulation = {"deviceName": "iPhone X"}
-        chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+        chrome_options.add_argument("--window-size=1600,1000")  # Desktop layout
+        # If you want mobile, uncomment these:
+        # mobile_emulation = {"deviceName": "iPhone X"}
+        # chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
         context.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=chrome_options
         )
     else:
-        raise Exception(f"Unsupported browser: {browser}")
+        raise Exception(f"Unsupported browser: {browser}")  # ← make sure this is in place
 
 def before_all(context):
     logging.info("Global test setup complete.")
