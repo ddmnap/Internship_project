@@ -7,7 +7,6 @@ import time
 from time import sleep
 
 
-
 @when('I click on the "Secondary" option from the left menu')
 def step_click_secondary(context):
     logging.info("Clicking on the Secondary menu option...")
@@ -111,7 +110,7 @@ def step_verify_all_product_tags(context):
     sleep(4)  # Let page load more
     context.driver.execute_script("window.scrollBy(0,2000)", "")
 
-    # Very important: Wait until old "For sale" listings are gone
+    # Wait until old "For sale" listings are gone
     try:
         wait.until_not(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div.for-sale-block"), "For sale"))
     except:
@@ -134,3 +133,82 @@ def step_verify_all_product_tags(context):
 
     if wrong_tags:
         raise AssertionError(f"Found wrong tags: {wrong_tags}")
+
+# -------------------- Price Range Filter Test Steps --------------------
+
+import logging
+import time
+import re
+from datetime import datetime
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from behave import when, then
+
+
+@when('I filter the products by price range from 1200000 to 2000000 AED')
+def step_filter_by_price_range(context):
+    logging.info("Filtering products by price range 1200000 - 2000000 AED...")
+    try:
+        time.sleep(1)
+
+        # Wait for and input the min price
+        min_input = WebDriverWait(context.driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "input[wized='unitPriceFromFilter']"))
+        )
+        min_input.click()
+        min_input.clear()
+        min_input.send_keys("1200000")
+
+        time.sleep(1)
+
+        # Wait for and input the max price
+        max_input = WebDriverWait(context.driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "input[wized='unitPriceToFilter']"))
+        )
+        max_input.click()
+        max_input.clear()
+        max_input.send_keys("2000000")
+
+        logging.info("Entered price range successfully.")
+    except Exception as e:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        screenshot_name = f"price_filter_failure_{timestamp}.png"
+        context.driver.save_screenshot(screenshot_name)
+        logging.error(f"Step failed: I filter the products by price range from 1200000 to 2000000 AED\nScreenshot saved as: {screenshot_name}")
+        raise AssertionError("Could not set price range. Screenshot saved as: " + screenshot_name)
+
+
+@when('I click Apply Filter after setting price range')
+def step_click_apply_filter_after_price(context):
+    logging.info("Clicking Apply Filter after setting price range...")
+    try:
+        apply_button = WebDriverWait(context.driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@wized='applyFilterButtonMLS']"))
+        )
+        apply_button.click()
+        logging.info("Clicked Apply Filter button.")
+    except Exception as e:
+        raise AssertionError("Could not click Apply Filter after price range. " + str(e))
+
+
+@then('All product cards should have prices within the selected range')
+def step_verify_prices_within_range(context):
+    logging.info("Verifying all products have prices in the range 1200000 - 2000000 AED...")
+    try:
+        time.sleep(2)
+
+        product_prices = context.driver.find_elements(By.CLASS_NAME, "number-price-text")
+        assert product_prices, "No product cards found after filtering!"
+
+        for price_element in product_prices:
+            raw = price_element.text
+            cleaned = re.sub(r"[^\d]", "", raw)
+            if not cleaned.isdigit():
+                raise AssertionError(f"Price '{raw}' is not a valid number.")
+            price = int(cleaned)
+            if not (1200000 <= price <= 2000000):
+                raise AssertionError(f"Found product price {price} outside the range 1200000-2000000.")
+        logging.info("All prices are within the selected range.")
+    except Exception as e:
+        raise AssertionError("Price verification failed. " + str(e))
